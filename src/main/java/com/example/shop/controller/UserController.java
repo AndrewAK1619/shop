@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@Validated // włącza adnotacje @Validated do metod
 @RestController
 // restController ma w sobie responseBody a controller nie ma,
 // dzięki temu może zwracać JSON
-@RequestMapping("/api/users") // zawsze api
 @RequiredArgsConstructor // tylko konstruktor dla finalnych zmiennych
-@Validated // włącza adnotacje @Validated do metod
+@RequestMapping("/api/users") // zawsze api
 public class UserController {
 
     private final UserService userService;
@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public UserDto updateUser(@PathVariable Long id, @Valid  @RequestBody UserDto user) {
+    public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto user) {
         // adnotacja Valid włącza walidatory
         return userMapper.daoToDto(userService.update(id, userMapper.dtoToDao(user)));
     }

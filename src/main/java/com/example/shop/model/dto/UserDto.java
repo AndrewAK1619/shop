@@ -13,14 +13,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
-// JsonInclude >> jeżeli jakaś wartość będzie null to nie zostanie dodane do odpowiedzi
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Data
-@PasswordValid(groups = Create.class)
 // dla naszej adnotacji walidacyjnej wskazujemy grupę do walidacji, kiedy ma zostać uruchomiona
+@PasswordValid(groups = Create.class)
+// JsonInclude >> jeżeli jakaś wartość będzie null to nie zostanie dodane do odpowiedzi
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
     private Long id;
     @NotBlank

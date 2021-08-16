@@ -7,6 +7,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update #tworzy automatycznie pola i tabelki, usówać trzeba już ręcznie
-#  jackson:
-#    serialization:
-#      fail-on-empty-beans: false
+  jackson:
+    serialization:
+      fail-on-empty-beans: false

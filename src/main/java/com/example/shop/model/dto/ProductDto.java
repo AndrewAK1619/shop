@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductDto {
 
     private Long id;
