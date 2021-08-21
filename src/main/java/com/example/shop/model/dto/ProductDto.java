@@ -25,4 +25,5 @@ public class ProductDto {
     private double price;
     @NotBlank
     private String description;
+    private Integer revisionNumber;
 }

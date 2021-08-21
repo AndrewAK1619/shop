@@ -35,4 +35,5 @@ public class UserDto {
     @NotBlank
     private String password;
     private String confirmPassword;
+    private Integer revisionNumber;
 }

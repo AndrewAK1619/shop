@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 
 // auditing - tworzenie historii danych, informacje jakie zostały dokonane operacje (Insert, Update, Delete)
 
-
 @Data   // get, set, equals, hashcode, to string, constr wielo arg dla finalnych zmiennych
 @Entity
 @Builder
