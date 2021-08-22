@@ -1,7 +1,6 @@
 package com.example.shop.controller;
 
 import com.example.shop.mapper.UserMapper;
-import com.example.shop.model.dao.User;
 import com.example.shop.model.dto.UserDto;
 import com.example.shop.service.UserService;
 import com.example.shop.validator.group.Create;
@@ -51,7 +50,7 @@ public class UserController {
 
     @GetMapping
     // @RequestParam >>>> ?page=0&size=10
-    public Page<User> getPageUser(@RequestParam int page, @RequestParam int size) {
-        return userService.getPage(PageRequest.of(page, size));
+    public Page<UserDto> getPageUser(@RequestParam int page, @RequestParam int size) {
+        return userService.getPage(PageRequest.of(page, size)).map(userMapper::daoToDto);
     }
 }

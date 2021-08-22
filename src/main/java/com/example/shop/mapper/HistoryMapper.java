@@ -1,6 +1,8 @@
 package com.example.shop.mapper;
 
+import com.example.shop.model.dao.Product;
 import com.example.shop.model.dao.User;
+import com.example.shop.model.dto.ProductDto;
 import com.example.shop.model.dto.UserDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -24,5 +26,5 @@ public interface HistoryMapper {
     @Mapping(source = "entity.price", target = "price")
     @Mapping(source = "entity.description", target = "description")
     @Mapping(source = "requiredRevisionNumber", target = "revisionNumber")
-    UserDto revisionToProductDto(Revision<Integer, User> revision);
+    ProductDto revisionToProductDto(Revision<Integer, Product> revision);
 }

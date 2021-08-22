@@ -1,13 +1,13 @@
 package com.example.shop.controller;
 
-import com.example.shop.model.dao.Product;
-import com.example.shop.model.dao.User;
+import com.example.shop.mapper.HistoryMapper;
+import com.example.shop.model.dto.ProductDto;
+import com.example.shop.model.dto.UserDto;
 import com.example.shop.repository.ProductRepository;
 import com.example.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.history.Revision;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,16 +17,17 @@ public class HistoryController {
 
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final HistoryMapper historyMapper;
 
     @GetMapping("/users/{id}")
-    public Page<Revision<Integer, User>> getHistoryUser(@PathVariable Long id, @RequestParam int page,
-                                                        @RequestParam int size) {
-        return userRepository.findRevisions(id, PageRequest.of(page, size));
+    public Page<UserDto> getHistoryUser(@PathVariable Long id, @RequestParam int page,
+                                        @RequestParam int size) {
+        return userRepository.findRevisions(id, PageRequest.of(page, size)).map(historyMapper::revisionToUserDto);
     }
 
     @GetMapping("products/{id}")
-    public Page<Revision<Integer, Product>> getHistoryProduct(@PathVariable Long id, @RequestParam int page,
-                                                              @RequestParam int size) {
-        return productRepository.findRevisions(id, PageRequest.of(page, size));
+    public Page<ProductDto> getHistoryProduct(@PathVariable Long id, @RequestParam int page,
+                                              @RequestParam int size) {
+        return productRepository.findRevisions(id, PageRequest.of(page, size)).map(historyMapper::revisionToProductDto);
     }
 }

@@ -1,7 +1,6 @@
 package com.example.shop.controller;
 
 import com.example.shop.mapper.ProductMapper;
-import com.example.shop.model.dao.Product;
 import com.example.shop.model.dto.ProductDto;
 import com.example.shop.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +39,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public Page<Product> getPage(@RequestParam int page, @RequestParam int size) {
-        return productService.getPage(PageRequest.of(page, size));
+    public Page<ProductDto> getPage(@RequestParam int page, @RequestParam int size) {
+        return productService.getPage(PageRequest.of(page, size)).map(productMapper::daoToDto);
     }
 }
