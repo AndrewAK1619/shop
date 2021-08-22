@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 // auditing - tworzenie historii danych, informacje jakie zostały dokonane operacje (Insert, Update, Delete)
 
@@ -24,7 +25,7 @@ import java.time.LocalDateTime;
 @Audited // doda nam tabelkę audytową
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class) // doda auditing
+@EntityListeners(AuditingEntityListener.class) // doda auditing dla tej encji
 public class User {
 
     @Id
@@ -37,6 +38,12 @@ public class User {
     private String email;
     @NotAudited // nie dodawać do audytowych tabelek
     private String password;
+    @ManyToMany
+    // name = "user_role" - zmienia nazwę tabeli pośredniczącej, bo inaczej by było user_roles
+    // inverseJoinColumns = @JoinColumn(name = "role_id") - zmienia nazwę kolumny która ma łączyć się z tabelką role
+    // inaczej by było roles_id
+    @JoinTable(name = "user_role", inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
     @CreatedDate
     private LocalDateTime createdDate;
     @CreatedBy

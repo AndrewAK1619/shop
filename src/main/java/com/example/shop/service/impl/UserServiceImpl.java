@@ -1,23 +1,32 @@
 package com.example.shop.service.impl;
 
 import com.example.shop.model.dao.User;
+import com.example.shop.repository.RoleRepository;
 import com.example.shop.repository.UserRepository;
 import com.example.shop.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor // tylko konstruktor dla finalnych zmiennych
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     @Override
     public User create(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // koduje hasło
+        // każda rola wielkimi literami i każda ma prefix - 'ROLE_' u nas ROLE_USER
+        // Collections.singleton(role) - tworzy nam immutable set, są też np. singletonList / singletonMap
+        roleRepository.findByName("ROLE_USER").ifPresent(role -> user.setRoles(Collections.singleton(role)));
         return userRepository.save(user);
         // save robi duzo sprawdzen jezeli obiekt ma id, jezeli ma
         // to robi select i jezeli obiekt istnieje to robi update
