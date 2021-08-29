@@ -10,3 +10,5 @@ spring:
   jackson:
     serialization:
       fail-on-empty-beans: false
+  flyway:
+    baseline-on-migrate: true #inicjalizuje historie flywaya gdy schemat bazodanowy nie jest pusty
