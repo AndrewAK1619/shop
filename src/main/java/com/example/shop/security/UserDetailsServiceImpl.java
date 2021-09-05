@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
@@ -25,6 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     // import org.springframework.security.core.userdetails.User;
 
     @Override
+    @Transactional // aby pobrać usera wraz z jego rolami
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // pobieramy naszego usera z bazy danych za pomoca maila
         return userRepository.findUserByEmail(email)
