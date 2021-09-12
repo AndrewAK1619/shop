@@ -1,6 +1,7 @@
 package com.example.shop.config;
 
 import com.example.shop.security.JwtAuthenticationFilter;
+import com.example.shop.security.JwtAuthorizationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -28,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // rejestrujemy nasz JwtAuthenticationFilter
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), objectMapper))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager()))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         // stateless - czyści informacje
