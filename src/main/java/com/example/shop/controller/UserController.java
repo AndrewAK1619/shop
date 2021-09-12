@@ -7,6 +7,7 @@ import com.example.shop.validator.group.Create;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,12 +39,14 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated() && (hasRole('ADMIN') || @securityService.hasAccessToUser(#id))")
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto user) {
         // adnotacja Valid włącza walidatory
         return userMapper.daoToDto(userService.update(id, userMapper.dtoToDao(user)));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUserById(@PathVariable Long id) {
         userService.deleteById(id);
     }
