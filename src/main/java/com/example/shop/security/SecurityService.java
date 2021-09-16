@@ -12,7 +12,7 @@ public class SecurityService {
 
     private final UserService userService;
 
-    boolean hasAccessToUser(Long id) {
+    public boolean hasAccessToUser(Long id) {
         return userService.getById(id).getEmail().equals(getCurrentUserEmail());
     }
 }
