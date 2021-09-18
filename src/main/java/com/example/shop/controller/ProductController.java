@@ -6,6 +6,7 @@ import com.example.shop.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,16 +25,19 @@ public class ProductController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductDto saveProduct(@Valid @RequestBody ProductDto productDto) {
         return productMapper.daoToDto(productService.create(productMapper.dtoToDao(productDto)));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductDto updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDto productDto) {
         return productMapper.daoToDto(productService.update(id, productMapper.dtoToDao(productDto)));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteProductById(@PathVariable Long id) {
         productService.deleteById(id);
     }

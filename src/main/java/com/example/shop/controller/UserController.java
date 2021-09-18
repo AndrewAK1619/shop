@@ -26,6 +26,7 @@ public class UserController {
 
     // nazwy zawsze oryginalne dla frontu
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated() && (hasRole('ADMIN') || @securityService.hasAccessToUser(#id))")
     public UserDto getUserById(@PathVariable Long id) {
         // pathVariable (do zmiennych w adresie linku) to zawsze zmienna w klamrach
         return userMapper.daoToDto(userService.getById(id));
@@ -52,6 +53,7 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     // @RequestParam >>>> ?page=0&size=10
     public Page<UserDto> getPageUser(@RequestParam int page, @RequestParam int size) {
         return userService.getPage(PageRequest.of(page, size)).map(userMapper::daoToDto);
