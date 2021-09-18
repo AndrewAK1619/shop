@@ -2,7 +2,6 @@ package com.example.shop.security;
 
 import com.example.shop.model.dto.LoginDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClaims;
@@ -46,8 +45,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
         try {
             // request.getInputStream() - pobiera naszego JSAONA z requestu
-            LoginDto loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDto.getEmail(),
+            var loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
+            var token = new UsernamePasswordAuthenticationToken(loginDto.getEmail(),
                     loginDto.getPassword());
             return getAuthenticationManager().authenticate(token);
         } catch (IOException e) {
@@ -60,7 +59,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException {
         // hasła nie podajemy do tokenu bo można go odczytać
-        Claims claims = new DefaultClaims()
+        var claims = new DefaultClaims()
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .setSubject(authResult.getName());
 
@@ -72,7 +71,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // sekretny klucz to suma kontrolna w tokenie
         // budujemy tokena
-        String token = Jwts.builder()
+        var token = Jwts.builder()
                 // przekazujemy dane z claims
                 .setClaims(claims)
                 // wskazujemy algotytm i sekretny klucz

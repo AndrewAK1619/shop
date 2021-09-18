@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     // jezeli pobierzerz obiekt z bazy danych to robi update jezeli obiekt zostanie zmieniony
     // jezeli nie zostanie to nie robi, robi to po returnie
     public User update(Long id, User user) {
-        User userDb = getById(id);
+        var userDb = getById(id);
         userDb.setFirstName(user.getFirstName());
         userDb.setLastName(user.getLastName());
         userDb.setBirthDate(user.getBirthDate());
