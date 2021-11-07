@@ -50,24 +50,28 @@
             <version>2.5.3</version>
         </dependency>
 
+        <!-- DATABASE -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
 
+        <!-- FLYWAY -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
             <version>7.14.0</version>
         </dependency>
 
+        <!-- LOMBOK -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
+        <!-- DO MAPOWANIA -->
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
@@ -80,6 +84,7 @@
             <version>0.9.1</version>
         </dependency>
 
+        <!-- CACHE - do cachowania danych -->
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast</artifactId>
@@ -108,12 +113,12 @@
             <version>${swagger.version}</version>
         </dependency>
 
+        <!-- TESTY -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
@@ -123,6 +128,7 @@
 
     <build>
         <plugins>
+            <!-- DLA LOMBOK'A -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -135,6 +141,7 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <!-- DLA LOMBOK'A I MAPSTRUCT"A aby działały razem -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
