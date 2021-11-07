@@ -96,6 +96,13 @@
             <version>${hazelcast.version}</version>
         </dependency>
 
+        <!-- XLSX - do edycji plików XLSX -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+
         <!-- SWAGGER -->
         <dependency>
             <groupId>io.springfox</groupId>

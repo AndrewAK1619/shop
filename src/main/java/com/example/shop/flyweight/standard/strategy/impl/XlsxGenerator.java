@@ -11,7 +11,7 @@ public class XlsxGenerator implements GeneratorStrategy {
 
     @Override
     public FileType getType() {
-        return FileType.XLSX;
+        return FileType.XLS;
     }
 
     @Override
