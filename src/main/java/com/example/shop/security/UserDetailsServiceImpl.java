@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional // aby pobrać usera wraz z jego rolami
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // pobieramy naszego usera z bazy danych za pomoca maila
-        return userRepository.findUserByEmail(email)
+        return userRepository.findByEmail(email)
                 // - mapujemy naszego usera na tego z security
                 .map(user -> new User(user.getEmail(), user.getPassword(), user.getRoles().stream()
                         // - mapujemy wszystkie role naszego Usera

@@ -10,5 +10,5 @@ import java.util.Optional;
 // daje nam dodatkowe metody w tym celu
 public interface UserRepository extends JpaRepository<User, Long>, RevisionRepository<User, Long, Integer> {
 
-    Optional<User> findUserByEmail(String email);
+    Optional<User> findByEmail(String email);
 }
