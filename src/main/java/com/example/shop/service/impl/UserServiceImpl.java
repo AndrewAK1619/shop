@@ -10,8 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.Collections;
+
+import static com.example.shop.security.SecurityUtils.getCurrentUserEmail;
 
 @Service
 @RequiredArgsConstructor // tylko konstruktor dla finalnych zmiennych
@@ -51,6 +54,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.getById(id);
         // jezeli nie znajdzie user po id wyrzuca entityNotFoundExeption
         // jak znajdzie to zwraca
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return userRepository.findByEmail(getCurrentUserEmail())
+                .orElseThrow(() -> new EntityNotFoundException("User not logged"));
     }
 
     @Override

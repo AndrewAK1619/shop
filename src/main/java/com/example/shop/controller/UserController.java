@@ -24,6 +24,12 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
+    @GetMapping("/current")
+    @PreAuthorize("isAuthenticated()")
+    public UserDto getCurrentUser() {
+        return userMapper.daoToDto(userService.getCurrentUser());
+    }
+
     // nazwy zawsze oryginalne dla frontu
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated() && (hasRole('ADMIN') || @securityService.hasAccessToUser(#id))")
