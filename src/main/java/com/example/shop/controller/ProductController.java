@@ -43,7 +43,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public Page<ProductDto> getPage(@RequestParam int page, @RequestParam int size) {
+    public Page<ProductDto> getProductPage(@RequestParam int page, @RequestParam int size) {
         return productService.getPage(PageRequest.of(page, size)).map(productMapper::daoToDto);
     }
 }
