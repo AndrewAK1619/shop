@@ -5,6 +5,7 @@ import com.example.shop.validator.group.Create;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -12,7 +13,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
+import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
 @NoArgsConstructor
@@ -22,6 +25,7 @@ import java.time.LocalDate;
 // JsonInclude >> jeżeli jakaś wartość będzie null to nie zostanie dodane do odpowiedzi
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto extends AuditableDto {
+
     private Long id;
     @NotBlank
     private String firstName;
@@ -36,4 +40,5 @@ public class UserDto extends AuditableDto {
     private String password;
     private String confirmPassword;
     private Integer revisionNumber;
+    private List<String> roles;
 }
