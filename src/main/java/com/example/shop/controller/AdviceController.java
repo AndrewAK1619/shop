@@ -1,5 +1,6 @@
 package com.example.shop.controller;
 
+import com.example.shop.model.dto.ErrorDto;
 import com.example.shop.model.dto.FieldErrorDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolationException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,5 +53,12 @@ public class AdviceController {
                     return new FieldErrorDto(fieldError.getField(), fieldError.getDefaultMessage());
                 })
                 .collect(Collectors.toList());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ErrorDto handleConstraintViolationException(ConstraintViolationException e) {
+        log.error("Validation failed", e);
+        return new ErrorDto(e.getMessage());
     }
 }
