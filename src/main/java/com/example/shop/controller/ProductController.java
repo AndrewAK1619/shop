@@ -30,8 +30,9 @@ public class ProductController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ProductDto saveProduct(@Valid @RequestBody ProductDto productDto) {
-        return productMapper.daoToDto(productService.create(productMapper.dtoToDao(productDto)));
+    public ProductDto saveProduct(@Valid @RequestPart ProductDto productDto,
+                                  @RequestPart @JpgPngValid MultipartFile file) {
+        return productMapper.daoToDto(productService.create(productMapper.dtoToDao(productDto), file));
     }
 
     @PutMapping("/{id}")

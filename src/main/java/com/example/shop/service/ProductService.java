@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ProductService {
 
     @CachePut(cacheNames = "product", key = "#result.id")
-    Product create(Product product);
+    Product create(Product product, MultipartFile file);
 
     @CachePut(cacheNames = "product", key = "#result.id")
     Product update(Long id, Product product, MultipartFile file);

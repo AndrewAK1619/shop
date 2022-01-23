@@ -26,8 +26,23 @@ public class ProductServiceImpl implements ProductService {
     private final FilePropertiesConfig filePropertiesConfig;
 
     @Override
-    public Product create(Product product) {
-        return productRepository.save(product);
+    @Transactional
+    public Product create(Product product, MultipartFile file) {
+        Product savedProduct = productRepository.save(product);
+
+        Path path = Paths.get(filePropertiesConfig.getProduct(),
+                savedProduct.getId() + "." + FilenameUtils.getExtension(file.getOriginalFilename()));
+        try {
+            Files.copy(file.getInputStream(), path);
+            String oldPath = savedProduct.getPath();
+            savedProduct.setPath(path.toString());
+            if (!savedProduct.getPath().equals(oldPath)) {
+                Files.delete(Paths.get(oldPath));
+            }
+        } catch (Exception e) {
+            log.error("Error during product saving file", e);
+        }
+        return savedProduct;
     }
 
     @Override
