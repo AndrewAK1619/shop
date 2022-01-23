@@ -1,15 +1,21 @@
 package com.example.shop.service.impl;
 
+import com.example.shop.config.properties.FilePropertiesConfig;
 import com.example.shop.model.dao.Product;
 import com.example.shop.repository.ProductRepository;
 import com.example.shop.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Slf4j
 @Service
@@ -17,6 +23,7 @@ import javax.transaction.Transactional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final FilePropertiesConfig filePropertiesConfig;
 
     @Override
     public Product create(Product product) {
@@ -25,12 +32,26 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public Product update(Long id, Product product) {
+    public Product update(Long id, Product product, MultipartFile file) {
         var productDb = getById(id);
-        productDb.setId(product.getId());
         productDb.setName(product.getName());
         productDb.setSerialNumber(product.getSerialNumber());
         productDb.setDescription(product.getDescription());
+
+        if (file != null) {
+            Path path = Paths.get(filePropertiesConfig.getProduct(),
+                    id + "." + FilenameUtils.getExtension(file.getOriginalFilename()));
+            try {
+                Files.copy(file.getInputStream(), path);
+                String oldPath = productDb.getPath();
+                productDb.setPath(path.toString());
+                if (!productDb.getPath().equals(oldPath)) {
+                    Files.delete(Paths.get(oldPath));
+                }
+            } catch (Exception e) {
+                log.error("Error during product saving file", e);
+            }
+        }
         return productDb;
     }
 

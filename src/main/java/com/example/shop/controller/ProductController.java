@@ -3,14 +3,18 @@ package com.example.shop.controller;
 import com.example.shop.mapper.ProductMapper;
 import com.example.shop.model.dto.ProductDto;
 import com.example.shop.service.ProductService;
+import com.example.shop.validator.JpgPngValid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
@@ -32,8 +36,10 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ProductDto updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDto productDto) {
-        return productMapper.daoToDto(productService.update(id, productMapper.dtoToDao(productDto)));
+    public ProductDto updateProduct(@PathVariable Long id,
+                                    @Valid @RequestPart ProductDto productDto, // zmiana z body na part
+                                    @RequestPart(required = false) @JpgPngValid MultipartFile file) {
+        return productMapper.daoToDto(productService.update(id, productMapper.dtoToDao(productDto), file));
     }
 
     @DeleteMapping("/{id}")

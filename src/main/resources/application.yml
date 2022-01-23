@@ -12,3 +12,5 @@ spring:
       fail-on-empty-beans: false
   flyway:
     baseline-on-migrate: true #inicjalizuje historie flywaya gdy schemat bazodanowy nie jest pusty
+file:
+  product: C:\Users\andre\Pictures\Java

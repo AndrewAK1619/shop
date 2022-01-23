@@ -29,6 +29,7 @@ public class Product extends Auditable implements IdentifiedDataSerializable {
     private int quantity;
     private double price;
     private String description;
+    private String path;
 
     @Override
     public int getFactoryId() {
@@ -48,6 +49,7 @@ public class Product extends Auditable implements IdentifiedDataSerializable {
         objectDataOutput.writeInt(quantity);
         objectDataOutput.writeDouble(price);
         objectDataOutput.writeString(description);
+        objectDataOutput.writeString(path);
     }
 
     @Override
@@ -58,5 +60,6 @@ public class Product extends Auditable implements IdentifiedDataSerializable {
         quantity = objectDataInput.readInt();
         price = objectDataInput.readLong();
         description = objectDataInput.readString();
+        path = objectDataInput.readString();
     }
 }
