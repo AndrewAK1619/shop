@@ -56,12 +56,16 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
+    @Transactional
     public void deleteProduct(Long productId) {
-
+        Long userId = userService.getCurrentUser().getId();
+        basketRepository.deleteByProductIdAndUserId(productId, userId);
     }
 
     @Override
+    @Transactional
     public void clearBasket() {
-
+        Long userId = userService.getCurrentUser().getId();
+        basketRepository.deleteByUserId(userId);
     }
 }
