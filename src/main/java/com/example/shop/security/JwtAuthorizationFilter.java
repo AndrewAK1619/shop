@@ -1,6 +1,8 @@
 package com.example.shop.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+@Slf4j
 // do sprawdzenia dostępu
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -33,29 +36,34 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }
         // wyciągnięcie tokena
-        var claims = Jwts.parser()
-                .setSigningKey("sekret")
-                .parseClaimsJws(token.replace("Bearer ", ""))
-                .getBody();
+        try {
+            var claims = Jwts.parser()
+                    .setSigningKey("sekret")
+                    .parseClaimsJws(token.replace("Bearer ", ""))
+                    .getBody();
 
-        var email = claims.getSubject();
-        if (email == null) {
+            var email = claims.getSubject();
+            if (email == null) {
+                response.setStatus(401);
+                return;
+            }
+            var authorities = claims.get("authorities", String.class);
+            var grantedAuthorities = new ArrayList<GrantedAuthority>();
+            if (authorities != null && !authorities.isEmpty()) {
+                grantedAuthorities = Arrays.stream(authorities.split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toCollection(ArrayList::new));
+            }
+            // credentials to OAuth
+            var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(email, null, grantedAuthorities);
+            // ustawianie danych aktualnie zalogowanego używtkonika i podczas ustawianai requestu pozwala te dane pobrać
+            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            // pozwala wywołać metodę z kontrolera
+            chain.doFilter(request, response);
+        } catch (ExpiredJwtException e) {
+            log.warn(e.getMessage());
             response.setStatus(401);
-            return;
         }
-        var authorities = claims.get("authorities", String.class);
-        var grantedAuthorities = new ArrayList<GrantedAuthority>();
-        if (authorities != null && !authorities.isEmpty()) {
-            grantedAuthorities = Arrays.stream(authorities.split(","))
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toCollection(ArrayList::new));
-        }
-        // credentials to OAuth
-        var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(email, null, grantedAuthorities);
-        // ustawianie danych aktualnie zalogowanego używtkonika i podczas ustawianai requestu pozwala te dane pobrać
-        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-        // pozwala wywołać metodę z kontrolera
-        chain.doFilter(request, response);
     }
 
 
