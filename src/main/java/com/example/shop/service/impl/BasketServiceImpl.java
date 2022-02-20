@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +25,14 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     public List<Product> getProducts() {
-        return null;
+        Long userId = userService.getCurrentUser().getId();
+        return basketRepository.findByUserId(userId).stream()
+                .map(basket -> {
+                    Product product = basket.getProduct();
+                    product.setQuantity(basket.getQuantity());
+                    return product;
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -51,8 +59,26 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
+    @Transactional
     public void addProductOverride(Long productId, int quantity) {
-
+        User currentUser = userService.getCurrentUser();
+        basketRepository.findByProductIdAndUserId(productId, currentUser.getId())
+                .ifPresentOrElse(basket -> {
+                    if (basket.getProduct().getQuantity() < quantity) {
+                        throw new ExceededQuantityException("Not enough product quantity");
+                    }
+                    basket.setQuantity(quantity);
+                }, () -> {
+                    Product productById = productService.getById(productId);
+                    if (productById.getQuantity() < quantity) {
+                        throw new ExceededQuantityException("Not enough product quantity");
+                    }
+                    basketRepository.save(Basket.builder()
+                            .user(currentUser)
+                            .product(productById)
+                            .quantity(quantity)
+                            .build());
+                });
     }
 
     @Override
