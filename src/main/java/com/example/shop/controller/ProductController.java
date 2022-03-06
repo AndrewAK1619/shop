@@ -4,6 +4,8 @@ import com.example.shop.mapper.ProductMapper;
 import com.example.shop.model.dto.ProductDto;
 import com.example.shop.service.ProductService;
 import com.example.shop.validator.JpgPngValid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +32,7 @@ public class ProductController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(description = "Save Product", security = @SecurityRequirement(name = "JWT_Shop_Security"))
     public ProductDto saveProduct(@Valid @RequestPart ProductDto productDto,
                                   @RequestPart @JpgPngValid MultipartFile file) {
         return productMapper.daoToDto(productService.create(productMapper.dtoToDao(productDto), file));
