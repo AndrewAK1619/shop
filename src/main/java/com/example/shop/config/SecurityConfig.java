@@ -1,9 +1,11 @@
 package com.example.shop.config;
 
-import com.example.shop.security.JwtAuthenticationFilter;
 import com.example.shop.security.JwtAuthorizationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,8 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .cors() // do blokowania wszystkich innych aplikacji
                 .and()
-                // rejestrujemy nasz JwtAuthenticationFilter
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), objectMapper))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager()))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -43,5 +43,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         // włożyliśmy do security userDetailsService, passwordEncoder
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+    }
+
+    // nadpisujemy tą metodę aby zarejestrować klasę AuthenticationManager jako been w sprignu
+    // bo spring sam nie rejestruje tej klasy jako bean (wyjątek)
+    @Override
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }
