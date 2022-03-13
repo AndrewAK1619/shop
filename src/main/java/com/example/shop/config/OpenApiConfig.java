@@ -23,6 +23,12 @@ public class OpenApiConfig {
                                                 .scheme("bearer")
                                                 .bearerFormat("JWT")
                                 )
+                                .addSecuritySchemes(
+                                        "Basic_Shop_security",
+                                        new SecurityScheme()
+                                                .type(SecurityScheme.Type.HTTP)
+                                                .scheme("basic")
+                                )
                 )
                 .info(new Info()
                         .title("Shop Api")

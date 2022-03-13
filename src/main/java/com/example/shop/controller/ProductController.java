@@ -32,7 +32,11 @@ public class ProductController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(description = "Save Product", security = @SecurityRequirement(name = "JWT_Shop_Security"))
+    @Operation(description = "Save Product",
+            security = {
+                    @SecurityRequirement(name = "JWT_Shop_Security"),
+                    @SecurityRequirement(name = "Basic_Shop_security")
+            })
     public ProductDto saveProduct(@Valid @RequestPart ProductDto productDto,
                                   @RequestPart @JpgPngValid MultipartFile file) {
         return productMapper.daoToDto(productService.create(productMapper.dtoToDao(productDto), file));
