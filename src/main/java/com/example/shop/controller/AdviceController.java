@@ -23,8 +23,9 @@ public class AdviceController {
     @ResponseStatus(HttpStatus.CONFLICT) // zwraca status dla użytkownika
     // jakbym chciał w kontrolerach zamienić domyślny status na inny
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class) // ta adnotacja przechwytuje exeption'a
-    public void handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
+    public ErrorDto handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
         log.error("Entity already exist", e);
+        return new ErrorDto(e.getMessage());
 
         // logi dajemy w cachu i gdzieś gdzie warto by było jak uznamy
 
