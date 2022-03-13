@@ -4,6 +4,8 @@ import com.example.shop.mapper.UserMapper;
 import com.example.shop.model.dto.UserDto;
 import com.example.shop.service.UserService;
 import com.example.shop.validator.group.Create;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +28,7 @@ public class UserController {
 
     @GetMapping("/current")
     @PreAuthorize("isAuthenticated()")
+    @Operation(description = "Get Current User", security = @SecurityRequirement(name = "JWT_Shop_Security"))
     public UserDto getCurrentUser() {
         return userMapper.daoToDto(userService.getCurrentUser());
     }
@@ -33,6 +36,7 @@ public class UserController {
     // nazwy zawsze oryginalne dla frontu
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated() && (hasRole('ADMIN') || @securityService.hasAccessToUser(#id))")
+    @Operation(description = "Get User By Id", security = @SecurityRequirement(name = "JWT_Shop_Security"))
     public UserDto getUserById(@PathVariable Long id) {
         // pathVariable (do zmiennych w adresie linku) to zawsze zmienna w klamrach
         return userMapper.daoToDto(userService.getById(id));
@@ -47,6 +51,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     @PreAuthorize("isAuthenticated() && (hasRole('ADMIN') || @securityService.hasAccessToUser(#id))")
+    @Operation(description = "Update User", security = @SecurityRequirement(name = "JWT_Shop_Security"))
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto user) {
         // adnotacja Valid włącza walidatory
         return userMapper.daoToDto(userService.update(id, userMapper.dtoToDao(user)));
@@ -54,12 +59,14 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(description = "Delete User By Id", security = @SecurityRequirement(name = "JWT_Shop_Security"))
     public void deleteUserById(@PathVariable Long id) {
         userService.deleteById(id);
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(description = "Get Page User", security = @SecurityRequirement(name = "JWT_Shop_Security"))
     // @RequestParam >>>> ?page=0&size=10
     public Page<UserDto> getPageUser(@RequestParam int page, @RequestParam int size) {
         return userService.getPage(PageRequest.of(page, size)).map(userMapper::daoToDto);

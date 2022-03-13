@@ -44,6 +44,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(description = "Update Product", security = @SecurityRequirement(name = "JWT_Shop_Security"))
     public ProductDto updateProduct(@PathVariable Long id,
                                     @Valid @RequestPart ProductDto productDto, // zmiana z body na part
                                     @RequestPart(required = false) @JpgPngValid MultipartFile file) {
@@ -52,6 +53,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(description = "Delete Product By Id", security = @SecurityRequirement(name = "JWT_Shop_Security"))
     public void deleteProductById(@PathVariable Long id) {
         productService.deleteById(id);
     }
