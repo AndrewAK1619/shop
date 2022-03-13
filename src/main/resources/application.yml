@@ -12,5 +12,19 @@ spring:
       fail-on-empty-beans: false
   flyway:
     baseline-on-migrate: true #inicjalizuje historie flywaya gdy schemat bazodanowy nie jest pusty
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: konto.testowe.dev.java
+    password: admin.dev123
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        transport:
+          protocol: smtp
 file:
   product: C:\Users\andre\Pictures\Java

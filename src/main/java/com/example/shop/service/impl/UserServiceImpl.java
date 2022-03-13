@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final MailServiceImpl mailService;
 
     @Override
     public User create(User user) {
@@ -30,7 +31,9 @@ public class UserServiceImpl implements UserService {
         // każda rola wielkimi literami i każda ma prefix - 'ROLE_' u nas ROLE_USER
         // Collections.singleton(role) - tworzy nam immutable set, są też np. singletonList / singletonMap
         roleRepository.findByName("ROLE_USER").ifPresent(role -> user.setRoles(Collections.singleton(role)));
-        return userRepository.save(user);
+        userRepository.save(user);
+        mailService.sendMail(user.getEmail(), "createUser");
+        return user;
         // save robi duzo sprawdzen jezeli obiekt ma id, jezeli ma
         // to robi select i jezeli obiekt istnieje to robi update
         // jezeli nie to insert
