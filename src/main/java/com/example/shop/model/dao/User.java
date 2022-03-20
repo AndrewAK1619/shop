@@ -33,6 +33,7 @@ public class User extends Auditable {
     private String email;
     @NotAudited // nie dodawać do audytowych tabelek
     private String password;
+    private String activatedToken;
     @ManyToMany
     // name = "user_role" - zmienia nazwę tabeli pośredniczącej, bo inaczej by było user_roles
     // inverseJoinColumns = @JoinColumn(name = "role_id") - zmienia nazwę kolumny która ma łączyć się z tabelką role

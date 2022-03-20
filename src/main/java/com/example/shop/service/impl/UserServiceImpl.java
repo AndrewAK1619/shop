@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static com.example.shop.security.SecurityUtils.getCurrentUserEmail;
 
@@ -31,8 +34,10 @@ public class UserServiceImpl implements UserService {
         // każda rola wielkimi literami i każda ma prefix - 'ROLE_' u nas ROLE_USER
         // Collections.singleton(role) - tworzy nam immutable set, są też np. singletonList / singletonMap
         roleRepository.findByName("ROLE_USER").ifPresent(role -> user.setRoles(Collections.singleton(role)));
+        String activatedToken = UUID.randomUUID().toString();// UUID - klaska do generowania losowego ciągu znaków (np. dla tokenu)
+        user.setActivatedToken(activatedToken);
         userRepository.save(user);
-        mailService.sendMail(user.getEmail(), "createUser");
+        sendActivationMail(user, activatedToken);
         return user;
         // save robi duzo sprawdzen jezeli obiekt ma id, jezeli ma
         // to robi select i jezeli obiekt istnieje to robi update
@@ -75,5 +80,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> getPage(Pageable pageable) {
         return userRepository.findAll(pageable);
+    }
+
+    private void sendActivationMail(User user, String activatedToken) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("link", "http://localhost:8080/api/users/activate?token=" + activatedToken);
+        variables.put("firstName", user.getFirstName());
+        mailService.sendMail(user.getEmail(), "createUser", variables);
     }
 }
