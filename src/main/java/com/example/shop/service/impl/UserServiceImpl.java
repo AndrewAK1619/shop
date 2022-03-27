@@ -86,6 +86,6 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> variables = new HashMap<>();
         variables.put("link", "http://localhost:8080/api/users/activate?token=" + activatedToken);
         variables.put("firstName", user.getFirstName());
-        mailService.sendMail(user.getEmail(), "createUser", variables);
+        mailService.sendMail(user.getEmail(), "createUser", variables, null, null);
     }
 }

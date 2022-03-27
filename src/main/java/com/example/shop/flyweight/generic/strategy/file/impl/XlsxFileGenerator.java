@@ -4,6 +4,7 @@ import com.example.shop.flyweight.generic.strategy.file.FileGeneratorStrategy;
 import com.example.shop.flyweight.model.FileType;
 import com.example.shop.model.dao.Product;
 import com.example.shop.repository.ProductRepository;
+import com.example.shop.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
@@ -15,7 +16,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+
+import static com.example.shop.security.SecurityUtils.getCurrentUserEmail;
 
 @Slf4j
 @Component
@@ -23,6 +27,7 @@ import java.util.List;
 public class XlsxFileGenerator implements FileGeneratorStrategy {
 
     private final ProductRepository productRepository;
+    private final MailService mailService;
 
     @Override
     public FileType getType() {
@@ -37,7 +42,10 @@ public class XlsxFileGenerator implements FileGeneratorStrategy {
             createHeaders(sheet);
             fillRecordsWithProductData(sheet);
 
-            return fileToByteArray(workbook);
+            byte[] file = fileToByteArray(workbook);
+
+            sendEmailReport(file);
+            return file;
         } catch (IOException e) {
             log.error("Couldn't create file");
         }
@@ -74,5 +82,15 @@ public class XlsxFileGenerator implements FileGeneratorStrategy {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         workbook.write(byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
+    }
+
+    private void sendEmailReport(byte[] file) {
+        mailService.sendMail(
+                getCurrentUserEmail(),
+                "productReport",
+                Collections.emptyMap(),
+                "Report.xls",
+                file
+        );
     }
 }
