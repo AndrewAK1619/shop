@@ -33,32 +33,46 @@ public class XlsxFileGenerator implements FileGeneratorStrategy {
     public byte[] generateFile() {
         try (Workbook workbook = WorkbookFactory.create(false)) {
             Sheet sheet = workbook.createSheet("Report");
-            Row row = sheet.createRow(0);
-            row.createCell(0).setCellValue("ID");
-            row.createCell(1).setCellValue("NAME");
-            row.createCell(2).setCellValue("SERIAL NUMBER");
-            row.createCell(3).setCellValue("quantity");
-            row.createCell(4).setCellValue("price");
-            row.createCell(5).setCellValue("description");
-            List<Product> products = productRepository.findAll();
 
-            for (int i = 0; i < products.size(); i++) {
-                row = sheet.createRow(i);
-                Product product = products.get(i);
-                row.createCell(0).setCellValue(product.getId());
-                row.createCell(1).setCellValue(product.getName());
-                row.createCell(2).setCellValue(product.getSerialNumber());
-                row.createCell(3).setCellValue(product.getQuantity());
-                row.createCell(4).setCellValue(product.getPrice());
-                row.createCell(5).setCellValue(product.getDescription());
-            }
-            sheet.setAutoFilter(new CellRangeAddress(0, products.size(), 0, 5));
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            workbook.write(byteArrayOutputStream);
-            return byteArrayOutputStream.toByteArray();
+            createHeaders(sheet);
+            fillRecordsWithProductData(sheet);
+
+            return fileToByteArray(workbook);
         } catch (IOException e) {
             log.error("Couldn't create file");
         }
         return new byte[0];
+    }
+
+    private void createHeaders(Sheet sheet) {
+        Row row = sheet.createRow(0);
+        row.createCell(0).setCellValue("ID");
+        row.createCell(1).setCellValue("NAME");
+        row.createCell(2).setCellValue("SERIAL NUMBER");
+        row.createCell(3).setCellValue("QUANTITY");
+        row.createCell(4).setCellValue("PRICE");
+        row.createCell(5).setCellValue("DESCRIPTION");
+    }
+
+    private void fillRecordsWithProductData(Sheet sheet) {
+        List<Product> products = productRepository.findAll();
+        Row row;
+        for (int i = 1; i < products.size(); i++) {
+            row = sheet.createRow(i);
+            Product product = products.get(i);
+            row.createCell(0).setCellValue(product.getId());
+            row.createCell(1).setCellValue(product.getName());
+            row.createCell(2).setCellValue(product.getSerialNumber());
+            row.createCell(3).setCellValue(product.getQuantity());
+            row.createCell(4).setCellValue(product.getPrice());
+            row.createCell(5).setCellValue(product.getDescription());
+        }
+        sheet.setAutoFilter(new CellRangeAddress(0, products.size(), 0, 5));
+    }
+
+    private byte[] fileToByteArray(Workbook workbook) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        workbook.write(byteArrayOutputStream);
+        return byteArrayOutputStream.toByteArray();
     }
 }
