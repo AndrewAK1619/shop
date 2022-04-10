@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.history.RevisionMetadata;
 
 import java.time.LocalDateTime;
 
@@ -19,4 +20,6 @@ public class AuditableDto {
     private String lastModifiedBy;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
+    private Integer revisionNumber;
+    private RevisionMetadata.RevisionType revisionType;
 }

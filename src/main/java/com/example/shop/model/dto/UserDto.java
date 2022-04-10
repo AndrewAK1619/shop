@@ -39,6 +39,5 @@ public class UserDto extends AuditableDto {
     @NotBlank
     private String password;
     private String confirmPassword;
-    private Integer revisionNumber;
     private List<String> roles;
 }

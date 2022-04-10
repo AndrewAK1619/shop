@@ -17,6 +17,7 @@ public interface HistoryMapper {
     @Mapping(source = "entity.birthDate", target = "birthDate")
     @Mapping(source = "entity.email", target = "email")
     @Mapping(source = "requiredRevisionNumber", target = "revisionNumber")
+    @Mapping(source = "metadata.revisionType", target = "revisionType")
     UserDto revisionToUserDto(Revision<Integer, User> revision);
 
     @Mapping(source = "entity.id", target = "id")
@@ -26,5 +27,6 @@ public interface HistoryMapper {
     @Mapping(source = "entity.price", target = "price")
     @Mapping(source = "entity.description", target = "description")
     @Mapping(source = "requiredRevisionNumber", target = "revisionNumber")
+    @Mapping(source = "metadata.revisionType", target = "revisionType")
     ProductDto revisionToProductDto(Revision<Integer, Product> revision);
 }

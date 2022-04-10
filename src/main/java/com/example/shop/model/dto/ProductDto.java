@@ -25,6 +25,5 @@ public class ProductDto extends AuditableDto {
     private double price;
     @NotBlank
     private String description;
-    private Integer revisionNumber;
     private String path;
 }
