@@ -15,7 +15,7 @@ class LoginServiceImplSpec extends Specification {
 
     def 'Should login user'() {
         given:
-        def loginDto = new LoginDto('example@example.com', 'dummyPassword')
+        def loginDto = Mock(LoginDto)
         var userNamePassword = new UsernamePasswordAuthenticationToken(
                 'example@example.com',
                 'dummyPassword'
@@ -27,11 +27,11 @@ class LoginServiceImplSpec extends Specification {
         loginServiceImpl.login(loginDto)
 
         then:
-        1 * loginDto.email >> 'example@example.com'
-        1 * loginDto.password >> 'dummyPassword'
+        1 * loginDto.getEmail() >> 'example@example.com'
+        1 * loginDto.getPassword() >> 'dummyPassword'
         1 * authenticationManager.authenticate(userNamePassword) >> authentication
         1 * authentication.getName() >> 'DummyName'
-        1 * authentication.getAuthorities() >> grantedAuthority
+        1 * authentication.getAuthorities() >> [grantedAuthority]
         1 * grantedAuthority.getAuthority() >> 'Authority'
         0 * _
     }

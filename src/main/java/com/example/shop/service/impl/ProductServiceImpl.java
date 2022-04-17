@@ -1,6 +1,7 @@
 package com.example.shop.service.impl;
 
 import com.example.shop.config.properties.FilePropertiesConfig;
+import com.example.shop.helper.FileHelper;
 import com.example.shop.model.dao.Product;
 import com.example.shop.repository.ProductRepository;
 import com.example.shop.service.ProductService;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -24,6 +24,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final FilePropertiesConfig filePropertiesConfig;
+    private final FileHelper fileHelper;
 
     @Override
     @Transactional
@@ -33,11 +34,11 @@ public class ProductServiceImpl implements ProductService {
         Path path = Paths.get(filePropertiesConfig.getProduct(),
                 savedProduct.getId() + "." + FilenameUtils.getExtension(file.getOriginalFilename()));
         try {
-            Files.copy(file.getInputStream(), path);
+            fileHelper.save(file.getInputStream(), path);
             String oldPath = savedProduct.getPath();
             savedProduct.setPath(path.toString());
             if (!savedProduct.getPath().equals(oldPath)) {
-                Files.delete(Paths.get(oldPath));
+                fileHelper.delete(Paths.get(oldPath));
             }
         } catch (Exception e) {
             log.error("Error during product saving file", e);
@@ -57,11 +58,11 @@ public class ProductServiceImpl implements ProductService {
             Path path = Paths.get(filePropertiesConfig.getProduct(),
                     id + "." + FilenameUtils.getExtension(file.getOriginalFilename()));
             try {
-                Files.copy(file.getInputStream(), path);
+                fileHelper.save(file.getInputStream(), path);
                 String oldPath = productDb.getPath();
                 productDb.setPath(path.toString());
                 if (!productDb.getPath().equals(oldPath)) {
-                    Files.delete(Paths.get(oldPath));
+                    fileHelper.delete(Paths.get(oldPath));
                 }
             } catch (Exception e) {
                 log.error("Error during product saving file", e);

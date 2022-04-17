@@ -90,7 +90,7 @@ class UserServiceImplSpec extends Specification {
         0 * _
     }
 
-    def 'Should not get current user'() {
+    def 'Should not get current user and thrown EntityNotFoundException'() {
         given:
         def securityContext = Mock(SecurityContext)
         SecurityContextHolder.setContext(securityContext) // aby wstrzyknąć context dla statycznej metody

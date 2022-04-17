@@ -23,7 +23,6 @@ class MailServiceImplSpec extends Specification {
         Map<String, Object> variables = new HashMap<>()
 
         def template = Mock(Template)
-        def context = new Context(Locale.getDefault(), variables)
 
         when:
         mailServiceImpl.sendMail(email, templateName, variables, fileName)
@@ -31,6 +30,8 @@ class MailServiceImplSpec extends Specification {
         then:
         1 * templateService.getTemplateByName(templateName) >> template
         1 * template.getBody() >> 'Body'
-        1 * templateEngine.process('Body', context) >> 'Body'
+        1 * templateEngine.process('Body', _ as Context) >> 'Body'
+        1 * mailSender.send(_)
+        0 * _
     }
 }
