@@ -40,8 +40,8 @@ class UserServiceImplSpec extends Specification {
         1 * user.setActivatedToken(_ as String)
         1 * userRepository.save(user)
         1 * user.getFirstName()
-        1 * user.getEmail() >> 'example@example.com'
-        1 * mailService.sendMail('example@example.com', 'createUser', _, null, null)
+        1 * user.getEmail() >> 'exampleDummy@example.com'
+        1 * mailService.sendMail('exampleDummy@example.com', 'createUser', _, null, null)
         0 * _
     }
 
@@ -60,8 +60,8 @@ class UserServiceImplSpec extends Specification {
         1 * user.setLastName('DummyLastName')
         1 * user.getBirthDate() >> LocalDate.of(2010, 5, 5)
         1 * user.setBirthDate(LocalDate.of(2010, 5, 5))
-        1 * user.getEmail() >> 'example@example.com'
-        1 * user.setEmail('example@example.com')
+        1 * user.getEmail() >> 'exampleDummy@example.com'
+        1 * user.setEmail('exampleDummy@example.com')
         0 * _
     }
 
@@ -85,12 +85,15 @@ class UserServiceImplSpec extends Specification {
 
         then:
         1 * securityContext.getAuthentication() >> authentication
-        1 * authentication.getName() >> 'DummyName'
-        1 * userRepository.findByEmail('DummyName') >> Optional.of(new User())
+        1 * authentication.getName() >> 'exampleDummy@example.com'
+        1 * userRepository.findByEmail('exampleDummy@example.com') >> Optional.of(new User())
         0 * _
     }
 
     def 'Should not get current user and thrown EntityNotFoundException'() {
+        // getCurrentUserEmail jest statyczną metodą, zatem możemy postarać się przygotować wszystko to
+        // to ma w sobie aby metoda się wykonała. W tym celu musimy zobaczyć co jest w środku i
+        // przygotować wartości. U nas securityContext, który dodamy do SecurityContextHolder
         given:
         def securityContext = Mock(SecurityContext)
         SecurityContextHolder.setContext(securityContext) // aby wstrzyknąć context dla statycznej metody
@@ -101,8 +104,8 @@ class UserServiceImplSpec extends Specification {
 
         then:
         1 * securityContext.getAuthentication() >> authentication
-        1 * authentication.getName() >> 'DummyName'
-        1 * userRepository.findByEmail('DummyName') >> Optional.empty()
+        1 * authentication.getName() >> 'exampleDummy@example.com'
+        1 * userRepository.findByEmail('exampleDummy@example.com') >> Optional.empty()
         0 * _
         def exception = thrown EntityNotFoundException
         exception.message == 'User not logged'

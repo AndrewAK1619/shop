@@ -12,12 +12,12 @@ public class JpgPngValidator implements ConstraintValidator<JpgPngValid, Multipa
     @Override
     public boolean isValid(MultipartFile multipartFile, ConstraintValidatorContext constraintValidatorContext) {
 
-        if (!multipartFile.isEmpty() && multipartFile.getOriginalFilename() != null) {
-            String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename()).toUpperCase();
-            return extension.equals("JPG") || extension.equals("JPEG") || extension.equals("PNG");
-        } else {
+        if (multipartFile.isEmpty() || multipartFile.getOriginalFilename() == null)
             return false;
-        }
+
+        String extension = FilenameUtils.getExtension(multipartFile.getOriginalFilename()).toUpperCase();
+        return extension.equals("JPG") || extension.equals("JPEG") || extension.equals("PNG");
+
 
 //        if (!multipartFile.isEmpty() && multipartFile.getOriginalFilename() != null) {
 //            String fileName = multipartFile.getOriginalFilename();

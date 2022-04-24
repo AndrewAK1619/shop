@@ -71,7 +71,7 @@ class ProductServiceImplSpec extends Specification {
         def file = Mock(MultipartFile)
         def inputStream = Mock(InputStream)
         def path = Paths.get("ExampleProduct", '2.xlsx')
-        def oldPath = Paths.get('/example/path')
+//        def oldPath = Paths.get('/example/path')
 
         when:
         productServiceImpl.create(product, file)
@@ -84,7 +84,7 @@ class ProductServiceImplSpec extends Specification {
         1 * file.getInputStream() >> inputStream
         inputStream.close()
         1 * fileHelper.save(inputStream, path)
-//        1 * product.getPath() >> '/example/path'
+//        2 * product.getPath() >> '/example/path'
 //        1 * product.setPath('ExampleProduct\\2.xlsx')
 //        1 * product.getPath() >> 'ExampleProduct\\2.xlsx'
 //        1 * fileHelper.delete(oldPath)
@@ -159,7 +159,7 @@ class ProductServiceImplSpec extends Specification {
         def file = Mock(MultipartFile)
         def inputStream = Mock(InputStream)
         def path = Paths.get("ExampleProduct", '2.xlsx')
-        def oldPath = Paths.get('/example/path')
+//        def oldPath = Paths.get('/example/path')
 
         when:
         productServiceImpl.update(2, product, file)
