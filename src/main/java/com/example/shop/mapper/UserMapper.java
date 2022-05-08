@@ -23,6 +23,7 @@ public interface UserMapper extends AuditableMapper<User, UserDto> {
 
     @Named("mapUserRoles")
     default List<String> mapUserRoles(Set<Role> roles) {
+        if (roles == null) return null;
         return roles.stream()
                 .map(Role::getName)
                 .collect(Collectors.toList());

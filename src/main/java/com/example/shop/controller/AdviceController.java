@@ -25,7 +25,7 @@ public class AdviceController {
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class) // ta adnotacja przechwytuje exeption'a
     public ErrorDto handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
         log.error("Entity already exist", e);
-        return new ErrorDto(e.getMessage());
+        return new ErrorDto("Entity already exist");
 
         // logi dajemy w cachu i gdzieś gdzie warto by było jak uznamy
 

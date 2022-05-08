@@ -71,7 +71,6 @@ class ProductServiceImplSpec extends Specification {
         def file = Mock(MultipartFile)
         def inputStream = Mock(InputStream)
         def path = Paths.get("ExampleProduct", '2.xlsx')
-//        def oldPath = Paths.get('/example/path')
 
         when:
         productServiceImpl.create(product, file)
@@ -82,15 +81,8 @@ class ProductServiceImplSpec extends Specification {
         1 * product.getId() >> 2
         1 * file.getOriginalFilename() >> 'ExampleFileName.xlsx'
         1 * file.getInputStream() >> inputStream
-        inputStream.close()
-        1 * fileHelper.save(inputStream, path)
-//        2 * product.getPath() >> '/example/path'
-//        1 * product.setPath('ExampleProduct\\2.xlsx')
-//        1 * product.getPath() >> 'ExampleProduct\\2.xlsx'
-//        1 * fileHelper.delete(oldPath)
+        1 * fileHelper.save(inputStream, path) >> {throw new IOException()}
         0 * _
-        def exception = thrown IOException
-        exception.message == 'Example'
     }
 
     def 'Should update product'() {
@@ -159,7 +151,6 @@ class ProductServiceImplSpec extends Specification {
         def file = Mock(MultipartFile)
         def inputStream = Mock(InputStream)
         def path = Paths.get("ExampleProduct", '2.xlsx')
-//        def oldPath = Paths.get('/example/path')
 
         when:
         productServiceImpl.update(2, product, file)
@@ -175,15 +166,8 @@ class ProductServiceImplSpec extends Specification {
         1 * filePropertiesConfig.getProduct() >> "ExampleProduct"
         1 * file.getOriginalFilename() >> 'ExampleFileName.xlsx'
         1 * file.getInputStream() >> inputStream
-        inputStream.close()
-        1 * fileHelper.save(inputStream, path)
-//        1 * productDb.getPath() >> '/example/path'
-//        1 * productDb.setPath('ExampleProduct\\2.xlsx')
-//        1 * productDb.getPath() >> 'ExampleProduct\\2.xlsx'
-//        1 * fileHelper.delete(oldPath)
+        1 * fileHelper.save(inputStream, path) >> {throw new IOException()}
         0 * _
-        def exception = thrown IOException
-        exception.message == 'Example'
     }
 
     def 'Should get product by id'() {

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,7 @@ public class UserController {
 
     @PostMapping
     @Validated(Create.class) // włącza walidacje dla wskazanej grupy
+    @ResponseStatus(HttpStatus.CREATED)
     public UserDto saveUser(@Valid @RequestBody UserDto user) { // RequestBody dla JSON
         // dto tylko w kontrolerach powinny być i mappery
         return userMapper.daoToDto(userService.create(userMapper.dtoToDao(user)));
